@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nectm-postgres
+spec:
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: nectm-postgres
+---
+apiVersion: apps/v1  
+kind: Deployment
+metadata:
+  name: nectm-postgres
+  labels:
+    app: nectm-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nectm-postgres
+  template:
+    metadata:
+      labels:
+        app: nectm-postgres
+    spec:
+      volumes:
+      - name: nectm-postgres-pv
+        persistentVolumeClaim:
+          claimName: nectm-postgres-pvc
+      containers:
+      - name: postgres
+        image: postgres:10.5
+        volumeMounts:
+        - name: nectm-postgres-pv
+          mountPath: /var/lib/postgresql/data
+          subPath: pgdata
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_DB
+          value: postgres
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+      terminationGracePeriodSeconds: 60

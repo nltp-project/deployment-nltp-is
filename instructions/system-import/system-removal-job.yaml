@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: system-removal-job
+spec:
+  # Keep container available for logs
+  ttlSecondsAfterFinished: 60
+  # Retry count
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: mt-system-removal-job
+        image: nltpcontainers.azurecr.io/mt-system-removal-job:42896
+        env:
+        - name: SYSTEM_ID
+          value: "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy" # Insert system id here
+        - name: SYSTEM_SERVICE_URL
+          value: "http://translation-system/language-directions"
+        - name: SYSTEM_SERVICE_USER
+          valueFrom:
+            secretKeyRef:
+              key: system_import_username
+              name: translation-services
+        - name: SYSTEM_SERVICE_PASS
+          valueFrom:
+            secretKeyRef:
+              key: system_import_password
+              name: translation-services
+        - name: MODEL_DIR
+          value: "/models"
+        volumeMounts:
+        - name: mt-system-storage
+          mountPath: /models
+      restartPolicy: Never
+      volumes:
+      - name: mt-system-storage
+        persistentVolumeClaim:
+          claimName: mt-system-storage
+      imagePullSecrets:
+      - name: nltp-cr-pull-secret

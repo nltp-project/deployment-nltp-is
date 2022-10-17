@@ -1,0 +1,113 @@
+# CAT tool storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cat-tool-data-pv-claim
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  #storageClassName: microk8s-hostpath
+---
+# CMS
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cms-data-pv-claim
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  #storageClassName: microk8s-hostpath
+---
+# File translation
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: file-service-storage
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  #storageClassName: microk8s-hostpath
+---
+# MT System
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mt-system-storage
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 30Gi   
+  #storageClassName: microk8s-hostpath
+---
+# CAT Redis
+# Redis storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-pv-claim
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  #storageClassName: microk8s-hostpath
+---
+# NECTM Postgres
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nectm-postgres-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  #storageClassName: microk8s-hostpath
+---
+# NECTM Elasticserach
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nectm-elasticsearch-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 32Gi
+  # IMPORTANT NOTE: ElasticSearch does not support NFS Based storage!
+  #storageClassName: microk8s-hostpath
+---
+# MySQL (TEST ENV ONLY)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-data
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  #storageClassName: microk8s-hostpath

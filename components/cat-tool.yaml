@@ -1,0 +1,181 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cat-tool
+  name: cat-tool
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: cat-tool
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cat-tool
+  name: cat-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cat-tool
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: cat-tool
+    spec:
+      containers:
+      - env:
+        # enable or disable DEV mode - true/false
+        - name: DEV_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: DEV_MODE
+        # cat backend public proxy path URL
+        - name: RELATIVE_HOST_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: RELATIVE_HOST_NAME
+        # Directory for all the cat backend files
+        - name: STORAGE_DIR
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: STORAGE_DIR
+        # MySQL DB connection
+        - name: CAT_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_DB_HOST
+        - name: CAT_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_DB_NAME
+        - name: CAT_LOG_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_LOG_DB_NAME
+        - name: CAT_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: cat-tool-secret
+              key: CAT_DB_USER
+        - name: CAT_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cat-tool-secret
+              key: CAT_DB_PASSWORD
+        # Internal k8s services - accessed by k8s internal dns (services) names
+        - name: CAT_ACTIVEMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_ACTIVEMQ_HOST
+        - name: CAT_REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_REDIS_HOST
+        - name: CAT_FILTERS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CAT_FILTERS_HOST
+        - name: FILE_CONVERTER_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: FILE_CONVERTER_BASE_URL
+        - name: MATECAT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: MATECAT_HOST
+        - name: JWT_KEY
+          value: "TESTS"
+        - name: JWT_KEY_KEYCLOAK
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: JWT_KEY_KEYCLOAK
+        - name: JWT_ISSUER_KEYCLOAK
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: JWT_ISSUER_KEYCLOAK
+        - name: MT_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: MT_BASE_URL
+        - name: MT_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: PUBLIC_CLIENT_ID
+        - name: TM_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: TM_BASE_URL
+        - name: SYNONYM_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: SERVICE_BASE_URL
+        - name: DOCUMENT_WHITELIST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: DOCUMENT_WHITELIST
+        - name: ALLOW_CORS
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: ALLOW_CORS
+        - name: CORS_WHITELIST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: CORS_WHITELIST
+        - name: TM_BLACKLIST
+          valueFrom:
+            configMapKeyRef:
+              name: cat-tool-config
+              key: TM_BLACKLIST
+        name: cat-tool
+        image: nltpcontainers.azurecr.io/cat-tool-backend:44008
+        imagePullPolicy: "IfNotPresent"
+        volumeMounts:
+        - mountPath: /data
+          name: cat-tool-data
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "1600Mi"
+          limits:
+            cpu: "4"
+            memory: "2200Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+      volumes:
+        - name: cat-tool-data
+          persistentVolumeClaim:
+            claimName: cat-tool-data-pv-claim   
+status: {}

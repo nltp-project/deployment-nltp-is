@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: frontend
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - env:
+        - name: SERVICE_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: SERVICE_BASE_URL
+        - name: PUBLIC_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: PUBLIC_CLIENT_ID
+        - name: CAT_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: CAT_SERVICE_URL
+        - name: KEYCLOAK_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: KEYCLOAK_AUTH_URL
+        - name: KEYCLOAK_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: KEYCLOAK_REALM
+        - name: MT_APP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: MT_APP_ID
+        - name: STRAPI_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: STRAPI_API_URL
+        - name: CAT_SYSTEM_LIST_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: CAT_SYSTEM_LIST_URL 
+        name: frontend
+        image: nltpcontainers.azurecr.io/nltp-website:44012
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "35Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+status: {}

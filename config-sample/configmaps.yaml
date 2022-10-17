@@ -1,0 +1,103 @@
+### TODO: Replace with placeholder values
+#cat-tool.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cat-tool-config
+  namespace: default
+data:
+  DEV_MODE: "false"
+  RELATIVE_HOST_NAME: https://nltp.example.com/api/mc/
+  STORAGE_DIR: "/data"
+  CAT_DB_HOST: "mysql"
+  CAT_DB_NAME: "nltp_cattool"
+  CAT_LOG_DB_NAME: "nltp_cattool_conversions_log"
+  CAT_ACTIVEMQ_HOST: "cat-tool-activemq"
+  CAT_REDIS_HOST: "cat-tool-redis"
+  CAT_FILTERS_HOST: "cat-tool-filters"
+  FILE_CONVERTER_BASE_URL: "http://file-converter-service/"
+  MATECAT_HOST: http://localhost
+  MT_BASE_URL: "https://nltp.example.com"
+  TM_BASE_URL: "http://cat-tool-tm-service/"
+  DOCUMENT_WHITELIST: "docx,xlsx,pptx,odt,odp,ods,txt"
+  ALLOW_CORS: "true"
+  CORS_WHITELIST: "https://nltp.example.com"
+  TM_BLACKLIST: "public"
+---
+#frontend-cms.yaml configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-cms-config
+  namespace: default
+data:
+  DATABASE_CLIENT: "mysql"
+  DATABASE_HOST: "mysql"
+  DATABASE_NAME: "nltp_cms"
+  DATABASE_PORT: "3306"
+---
+#common-config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-config
+  namespace: default
+data:
+  SERVICE_BASE_URL: "https://nltp.example.com"
+  PUBLIC_CLIENT_ID: "NLTP"
+  JWT_KEY_KEYCLOAK: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIw7h1Yxkb5dTWnWRXx1Uv4qwAWm5LqZXYDDcJ9JSWNKEMp3188TjNFPiIR0T0IsrsFWwhF1mypvoHc0cYHNo+Y0USfPzywoI3YwONYkIKaqE6DonabK6lvu1LaoUGUuEQnqdgxv7RPcPj8PM2wgEVe0JielglsuwuBK02YsuO063g1GSi11uCjqg/NgJ/Xzj2V32I4mndH8UEaz2LppsJdE9GLUmbOprBQRwJa5EYlFMe3mwN7p9it07rLVqBR7na+zI+WUcf0nxnTuzi+eRr/mBgmcQZgtlaFjFltjigftarH154Xg7Y67Q7MfsUgZXfa8WMoxBGD/9ETrMyrXOQIDAQAB"
+  JWT_ISSUER_KEYCLOAK: "https://nltp-auth.example.com/auth/realms/Main"
+  TRANSLATE_API_PUB_URI: "https://nltp.example.com/api/translate"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: databases
+  namespace: default
+data:
+  filetranslation_db_host: "mysql" # TODO
+  filetranslation_db: "nltp_filetranslation" # TODO
+  websitetranslation_db_host: "mysql" # TODO
+  websitetranslation_db: "nltp_websitetranslation" # TODO
+---
+#frontend.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: default
+data:
+  CAT_SERVICE_URL: "https://nltp.example.com/api/cat/"
+  MT_APP_ID: "MT|Web|nltp.example.com"
+  KEYCLOAK_AUTH_URL: "https://nltp-auth.example.com/auth/"
+  KEYCLOAK_REALM: "Main"
+  STRAPI_API_URL: "https://nltp-cms.example.com"
+  CAT_SYSTEM_LIST_URL: "https://nltp.example.com/api/translate/language-directions"
+---
+#keycloak.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+  namespace: default
+data:
+  KC_HOSTNAME: "nltp-auth.example.com"
+  KC_PRIVACY_URL: "https://nltp.example.com/page/privacy-policy" # Keycloak Terms and Conditions - Privacy Policy URL 
+  KC_TERMS_URL: "https://nltp.example.com/page/terms" # Keycloak Terms and Conditions - Terms of Service URL
+  DB_VENDOR: "mysql"
+  DB_URL: "jdbc:mysql://mysql/nltp_keycloak?characterEncoding=UTF-8&connectTimeout=30000&socketTimeout=30000&useLegacyDatetimeCode=false&serverTimezone=UTC"
+---
+#docs.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docs-config
+  namespace: default
+data:
+  TITLE: 'National Language Technology Platform'
+  TAGLINE: 'National Language Technology Platform'
+  URL: https://nltp.example.com/ # Docs URL used for generating sitemap
+  BASE_URL: /docs/
+  FOOTER: "© 2022 NLTP. All rights reserved."
+  NLTP_HOME_URL: https://nltp.example.com/
+  NLTP_LOGO_URL: https://nltp.example.com/assets/images/nltp/menu-logo.svg

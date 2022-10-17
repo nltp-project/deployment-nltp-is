@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-proxy
+spec:
+  ports:
+    - name: http
+      protocol: "TCP"
+      port: 80
+      targetPort: 80
+  selector:
+    app: web-proxy
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-proxy
+spec:
+  selector:
+    matchLabels:
+      app: web-proxy
+  template:
+    metadata:
+      labels:
+        app: web-proxy
+    spec:
+      containers:
+        - name: web-proxy
+          image: nltpcontainers.azurecr.io/web-proxy:41919
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: AppConfiguration__Configuration__PublicUrl
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVICE_BASE_URL
+                  name: common-config
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 80
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 80
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret

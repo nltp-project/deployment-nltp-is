@@ -1,0 +1,96 @@
+## https://www.nec-tm.eu/
+## NEC TM source code: https://github.com/Pangeamt/nectm/
+## Technical description https://www.nec-tm.eu/wp-content/uploads/2020/03/NEC-TM-Technical-description.pdf
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nectm
+  name: nectm
+spec:
+  ports:
+  ## access admin page: /admin - default user admin:admin and API: /api/v1, example http://host/api/v1/tm?q=English+skills"
+  - name: "7979-nectm-admin-and-api"
+    port: 7979
+    targetPort: 7979
+  selector:
+    app: nectm
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nectm
+  name: nectm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nectm
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nectm
+    spec:
+      containers:
+      - name: nectm
+        image: nltpcontainers.azurecr.io/nectm:43943
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 7979
+        livenessProbe:
+          httpGet:
+            path: /admin/
+            port: 7979
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /admin/
+            port: 7979
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "1Gi"
+        env:
+          - name: DB_HOST
+            value: nectm-postgres
+          - name: DB_USER
+            value: postgres
+          - name: DB_NAME
+            value: postgres
+          - name: DB_PASS
+            value: postgres
+          - name: ELASTIC_HOST
+            value: nectm-elasticsearch
+          - name: REDIS_HOST
+            value: cat-tool-redis
+          - name: ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: cat-tm-service-secret
+                key: ActivaTm__AdminUser
+          - name: ADMIN_PASS
+            valueFrom:
+              secretKeyRef:
+                name: cat-tm-service-secret
+                key: ActivaTm__AdminPwd
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+status: {}

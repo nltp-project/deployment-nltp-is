@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: file-converter
+  name: file-converter-service
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 5000
+  selector:
+    app: file-converter
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: file-converter
+  name: file-converter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-converter
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: file-converter
+    spec:
+      containers:
+      - name: file-converter
+        image: nltpcontainers.azurecr.io/file-converter-service:25920
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "63Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+status: {}

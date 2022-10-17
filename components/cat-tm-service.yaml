@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tm-service
+  name: cat-tool-tm-service
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: tm-service
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tm-service
+  name: tm-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tm-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tm-service
+    spec:
+      containers:
+      - env:
+        - name: ActivaTm__URL
+          value: "http://nectm:7979/api/v1"
+        - name: ActivaTm__AdminUser
+          valueFrom:
+            secretKeyRef:
+              name: cat-tm-service-secret
+              key: ActivaTm__AdminUser
+        - name: ActivaTm__AdminPwd
+          valueFrom:
+            secretKeyRef:
+              name: cat-tm-service-secret
+              key: ActivaTm__AdminPwd
+        - name: ActivaTm__UserPwd
+          valueFrom:
+            secretKeyRef:
+              name: cat-tm-service-secret
+              key: ActivaTm__UserPwd           
+        - name: Auth__LetsMT__JwtBearerSecret
+          value: "tXrJM0mlyD"
+        - name: Auth__KeyCloak__JwtBearerSecret
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: JWT_KEY_KEYCLOAK
+        - name: Auth__KeyCloak__JwtBearerIssuer
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: JWT_ISSUER_KEYCLOAK
+        - name: Auth__KeyCloak__JwtBearerAudience
+          value: "mt-translator"
+        - name: TmController__TmSlidingExpiration
+          value: "7"
+        - name: TmController__TmMaxExpiration
+          value: "30"
+        - name: TmController__UserSlidingExpiration
+          value: "7"
+        - name: TmController__UserMaxExpiration
+          value: "30"
+        - name: TmController__TmSearchLimit
+          value: "30"
+        - name: KeyVaultName
+          value: ""
+        - name: Logging__LogLevel__Default
+          value: Warning
+        - name: Logging__LogLevel__System
+          value: Warning
+        - name: Logging__LogLevel__Microsoft
+          value: Warning
+        name: tm-service
+        image: nltpcontainers.azurecr.io/translation-memory-service:34133
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "1m"
+            memory: "128Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+status: {}

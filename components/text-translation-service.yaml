@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-translation-service
+spec:
+  ports:
+    - name: http
+      protocol: "TCP"
+      port: 80
+      targetPort: 80
+  selector:
+    app: text-translation-service
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-translation-service
+spec:
+  selector:
+    matchLabels:
+      app: text-translation-service
+  template:
+    metadata:
+      labels:
+        app: text-translation-service
+    spec:
+      containers:
+        - name: text-translation-service
+          image: nltpcontainers.azurecr.io/text-translation-service:42933
+          imagePullPolicy: "IfNotPresent"
+          env:
+            # Configuration
+            - name: Configuration__PublicUri
+              valueFrom:
+                configMapKeyRef:
+                  key: TRANSLATE_API_PUB_URI
+                  name: common-config           
+            - name: Services__ETranslation__UserName
+              valueFrom:
+                secretKeyRef:
+                  key: etranslation_username
+                  name: translation-services
+            - name: Services__ETranslation__Password
+              valueFrom:
+                secretKeyRef:
+                  key: etranslation_password
+                  name: translation-services
+            - name: Services__Redis__Uri
+              value: "cat-tool-redis"
+            # RabbitMQ
+            - name: Services__RabbitMQ__Host
+              value: $(RABBITMQ_SERVICE_HOST)
+            - name: Services__RabbitMQ__Port
+              value: $(RABBITMQ_SERVICE_PORT)
+            - name: Services__RabbitMQ__UserName
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: rabbitmq
+            - name: Services__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: rabbitmq
+            # Text Translation worker
+            - name: Services__TextTranslationWorker__Uri
+              value: http://text-translation-worker
+            # Translation system service
+            - name: Services__TranslationSystem__Uri
+              value: http://translation-system
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 80
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 80
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret

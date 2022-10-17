@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-translation-worker-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+spec:
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 80
+    targetPort: 8080
+  selector:
+    app: text-translation-worker-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-translation-worker-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+spec:
+  selector:
+    matchLabels:
+      app: text-translation-worker-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+  template:
+    metadata:
+      labels:
+        app: text-translation-worker-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+    spec:
+      containers:
+      - name: text-translation-worker
+        image: nltpcontainers.azurecr.io/text-translation-worker:43646
+        imagePullPolicy: "IfNotPresent"
+        env:
+        - name: SYSTEM
+          value: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to real system id
+        - name: WORKDIR
+          value: /opt/letsmt-tmp/systems/yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to real system id
+        - name: TOOLS_DIR
+          value: /usr/local/lib/letsmt/tools-131030
+        - name: RESULT_DIR
+          value: /opt/letsmt/trained-systems
+        - name: MODEL_DIR
+          value: /opt/letsmt-tmp/systems
+        - name: MARIAN_PORT
+          value: "8090"
+        - name: WORKER_PORT
+          value: "8080"
+        - name: SYSTEM_USER
+          value: "-"
+        - name: RR_TYPE
+          value: local_metadata
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "1Gi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
+        volumeMounts:
+        - name: mt-system-storage
+          mountPath: /opt/letsmt-tmp/systems
+      volumes:
+      - name: mt-system-storage
+        persistentVolumeClaim:
+          claimName: mt-system-storage
+      imagePullSecrets:
+      - name: nltp-cr-pull-secret

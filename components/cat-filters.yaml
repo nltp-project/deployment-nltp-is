@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: filters
+  name: cat-tool-filters
+spec:
+  ports:
+  - name: "8732"
+    port: 8732
+    targetPort: 8732
+  selector:
+    app: filters
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: filters
+  name: filters
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filters
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: filters
+    spec:
+      containers:
+      - name: filters
+        image: nltpcontainers.azurecr.io/matecat-filters:34010
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 8732
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "175Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+status: {}

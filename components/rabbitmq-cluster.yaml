@@ -1,0 +1,43 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+  annotations:
+    # A single RabbitMQ cluster per Knative Eventing installation
+    rabbitmq.com/topology-allowed-namespaces: "*"
+spec:
+  image: rabbitmq:3.9-management
+  # RabbitMQ server instance count (preferably odd number)
+  replicas: 1
+  rabbitmq:
+    # Consumer timeout (in milliseconds):
+    # https://www.rabbitmq.com/consumers.html#acknowledgement-timeout
+    additionalConfig: |
+      consumer_timeout = 604800000 
+  resources:
+    requests:
+      cpu: 100m
+      memory: 2Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: rabbitmq
+                env:
+                - name: RABBITMQ_DEFAULT_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: username
+                      name: rabbitmq
+                - name: RABBITMQ_DEFAULT_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: rabbitmq

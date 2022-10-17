@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: https
+    port: 443
+    targetPort: 8443
+  selector:
+    app: keycloak
+status:
+  loadBalancer: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - env:
+        - name: KC_HEALTH_ENABLED
+          value: "true"
+        - name: KC_PROXY
+          value: "edge"
+        - name: KC_HOSTNAME
+          valueFrom:
+           configMapKeyRef:
+            name: keycloak-config
+            key: KC_HOSTNAME
+        - name: PRIVACY_URL
+          valueFrom:
+           configMapKeyRef:
+            name: keycloak-config
+            key: KC_PRIVACY_URL
+        - name: TERMS_URL
+          valueFrom:
+           configMapKeyRef:
+            name: keycloak-config
+            key: KC_TERMS_URL
+        - name: KEYCLOAK_ADMIN
+          valueFrom:
+           secretKeyRef:
+            name: keycloak-secret
+            key: KEYCLOAK_USER
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+           secretKeyRef:
+            name: keycloak-secret
+            key: KEYCLOAK_PASSWORD
+        - name: KC_DB
+          valueFrom:
+           configMapKeyRef:
+            name: keycloak-config
+            key: DB_VENDOR
+        - name: KC_DB_URL
+          valueFrom:
+           configMapKeyRef:
+            name: keycloak-config
+            key: DB_URL
+        - name: KC_DB_USERNAME
+          valueFrom:
+           secretKeyRef:
+            name: keycloak-secret
+            key: DB_USER
+        - name: KC_DB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+            name: keycloak-secret
+            key: DB_PASSWORD
+        image: nltpcontainers.azurecr.io/auth-keycloak-nltp:43989
+        imagePullPolicy: "IfNotPresent"
+        name: keycloak
+        ports:
+        - name: kc-https
+          containerPort: 8443
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "804Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1400Mi"
+        livenessProbe:
+          httpGet:
+            path: /auth/health/live
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /auth/health/ready
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 10
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

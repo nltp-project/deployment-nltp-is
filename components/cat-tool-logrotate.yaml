@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cat-tool-logrotate
+  namespace: default
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cat-tool-logrotate
+            image: nltpcontainers.azurecr.io/cat-tool-maintenance:43693
+            imagePullPolicy: "IfNotPresent"
+            command: ["/usr/sbin/logrotate", "-v",  "-f", "/etc/logrotate.d/catlogrotate"]
+            volumeMounts:
+            - name: logrotate-conf
+              mountPath: /etc/logrotate.d/catlogrotate
+            - name: cat-tool-data
+              mountPath: /data
+          volumes:
+            - name: logrotate-conf
+              configMap:
+                name: cat-logrotate-config
+            - name: cat-tool-data
+              persistentVolumeClaim:
+                claimName: cat-tool-data-pv-claim
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: nltp-cr-pull-secret
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cat-logrotate-config
+  namespace: default
+data:
+  cat-tool-logs.conf: |
+    /data/log_archive/*.log 
+    /data/log_archive/*.txt 
+    {
+        # xfs = id 33 on Alpine -> www-data on Ubuntu
+        su xfs xfs
+        daily
+        missingok
+        notifempty
+        rotate 5
+        compress
+        delaycompress
+        copytruncate
+        maxsize 100M
+    }

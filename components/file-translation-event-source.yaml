@@ -1,0 +1,28 @@
+apiVersion: sources.knative.dev/v1alpha1
+kind: RabbitmqSource
+metadata:
+  name: file-translation-event-source
+  namespace: default
+spec:
+  rabbitmqClusterReference:
+    # name: rabbitmq
+    namespace: default
+    connectionSecret:
+      name: rabbitmq
+  rabbitmqResourcesConfig:
+    predeclared: true
+    exchangeName: "file-translation"
+    queueName: "file-translation"
+    parallelism: 1
+  delivery:
+    # Retry "forever" => 30 days" 
+    retry: 2592000
+    backoffPolicy: "linear"
+    backoffDelay: "PT1S"
+  sink:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: file-translation-worker
+      namespace: default
+

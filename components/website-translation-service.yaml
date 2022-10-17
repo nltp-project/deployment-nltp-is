@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: website-translation-service
+spec:
+  ports:
+    - name: http
+      protocol: "TCP"
+      port: 80
+      targetPort: 80
+  selector:
+    app: website-translation-service
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-translation-service
+spec:
+  selector:
+    matchLabels:
+      app: website-translation-service
+  template:
+    metadata:
+      labels:
+        app: website-translation-service
+    spec:
+      containers:
+        - name: website-translation-service
+          image: nltpcontainers.azurecr.io/website-translation-service:44073
+          imagePullPolicy: "IfNotPresent"
+          env:
+            # Database configuration
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: websitetranslation_db_user
+                  name: mysql-db-users
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: websitetranslation_db_user_pwd
+                  name: mysql-db-users
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: websitetranslation_db_host
+                  name: databases
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: websitetranslation_db
+                  name: databases
+            - name: Services__Database__ConnectionString
+              value: server=$(DB_HOST);database=$(DB_NAME);uid=$(DB_USER);pwd=$(DB_PASSWORD)
+            # Translation system service
+            - name: Services__TranslationSystem__Uri
+              value: http://translation-system
+            # Text translation service
+            - name: Services__TextTranslation__Uri
+              value: http://text-translation-service
+            # KeyCloak configuration
+            - name: Services__KeyCloak__Issuer
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: JWT_ISSUER_KEYCLOAK
+            - name: Services__KeyCloak__Secret
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: JWT_KEY_KEYCLOAK
+          ports:
+            - containerPort: 80
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health/live
+          #     port: 80
+          #   initialDelaySeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: 80
+          #   initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "230Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret

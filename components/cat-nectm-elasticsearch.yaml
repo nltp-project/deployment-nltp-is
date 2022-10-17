@@ -1,0 +1,105 @@
+# initContainers ref: https://www.digitalocean.com/community/tutorials/how-to-set-up-an-elasticsearch-fluentd-and-kibana-efk-logging-stack-on-kubernetes
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nectm-elasticsearch
+  name: nectm-elasticsearch
+spec:
+  ports:
+  - name: "9200"
+    port: 9200
+    targetPort: 9200
+  selector:
+    app: nectm-elasticsearch
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nectm-elasticsearch-config
+data:
+  elasticsearch.yml: |
+    network.host: 0.0.0.0
+    node.store.allow_mmap: false
+    discovery.type: single-node
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nectm-elasticsearch
+  name: nectm-elasticsearch
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nectm-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: nectm-elasticsearch
+    spec:
+      volumes:
+      - name: nectm-elasticsearch-pv
+        persistentVolumeClaim:
+          claimName: nectm-elasticsearch-pvc
+      - name: nectm-elasticsearch-config
+        configMap:
+          name: nectm-elasticsearch-config
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: nectm-elasticsearch-pv
+          mountPath: /usr/share/elasticsearch/data
+      - name: increase-vm-max-map
+        image: busybox
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      - name: increase-fd-ulimit
+        image: busybox
+        command: ["sh", "-c", "ulimit -n 65536"]
+        securityContext:
+          privileged: true
+      containers:
+      - env:
+        - name: cluster.name
+          value: nectm
+        - name: ELASTIC_APM_STACK_TRACE_LIMIT
+          value: "0"
+        - name: ES_JAVA_OPTS
+          value: "-Xms1g -Xmx1g"
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.8.23
+        imagePullPolicy: "IfNotPresent"
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health?wait_for_status=yellow&timeout=3s
+            port: 9200
+          initialDelaySeconds: 30
+        volumeMounts:
+        - mountPath: "/usr/share/elasticsearch/data"
+          name: nectm-elasticsearch-pv
+        - name: nectm-elasticsearch-config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+        resources:
+          requests:
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

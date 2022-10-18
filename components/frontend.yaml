@@ -44,11 +44,6 @@ spec:
             configMapKeyRef:
               name: common-config
               key: PUBLIC_CLIENT_ID
-        - name: CAT_SERVICE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: frontend-config
-              key: CAT_SERVICE_URL
         - name: KEYCLOAK_AUTH_URL
           valueFrom:
             configMapKeyRef:
@@ -69,13 +64,23 @@ spec:
             configMapKeyRef:
               name: frontend-config
               key: STRAPI_API_URL
+        - name: CAT_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: CAT_SERVICE_URL
         - name: CAT_SYSTEM_LIST_URL
           valueFrom:
             configMapKeyRef:
               name: frontend-config
               key: CAT_SYSTEM_LIST_URL 
+        - name: CAT_TERM_LOOKUP_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: CAT_TERM_LOOKUP_URL
         name: frontend
-        image: nltpcontainers.azurecr.io/nltp-website:44012
+        image: nltpcontainers.azurecr.io/nltp-website:44109
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

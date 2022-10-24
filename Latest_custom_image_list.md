@@ -12,7 +12,7 @@
 | nltpcontainers.azurecr.io/nltp-docs:43608 |
 | nltpcontainers.azurecr.io/file-translation-service:42956 |
 | nltpcontainers.azurecr.io/file-translation-worker:44058 |
-| nltpcontainers.azurecr.io/nltp-website:44109 |
+| nltpcontainers.azurecr.io/nltp-website:44218 |
 | nltpcontainers.azurecr.io/strapi-cms:43820 |
 | nltpcontainers.azurecr.io/auth-keycloak-nltp:43989 |
 | nltpcontainers.azurecr.io/text-translation-service:42933 |

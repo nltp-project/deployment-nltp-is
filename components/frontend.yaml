@@ -79,8 +79,13 @@ spec:
             configMapKeyRef:
               name: frontend-config
               key: CAT_TERM_LOOKUP_URL
+        - name: SUPPORT_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: SUPPORT_EMAIL
         name: frontend
-        image: nltpcontainers.azurecr.io/nltp-website:44109
+        image: nltpcontainers.azurecr.io/nltp-website:44218
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

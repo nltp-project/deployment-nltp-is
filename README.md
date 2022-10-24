@@ -52,30 +52,33 @@ Recommended requirements when running in production environment:
 - SSD Storage
 
 ## Component resources overview
-| **Component**                 | **CPU Request** | **Memory Request** | **CPU Limit** | **Memory Limit** | **Comment**                               |
-| ----------------------------- | --------------- | ------------------ | ------------- | ---------------- | ----------------------------------------- |
-| tm-service                    | 1m              | 128Mi              | 1             | 512Mi            |                                           |
-| docs                          | 10m             | 50Mi               | 500m          | 256Mi            |                                           |
-| web-proxy                     | 10m             | 128Mi              | 1             | 512Mi            |                                           |
-| text-translation-worker (CPU) | 1               | 1G                 | 1             | 2G               | For each MT system                        |
-| text-translation-worker (GPU) | 200m            | 1G                 | 1             | 2G               | For each MT system, including 2GB GPU RAM |
-| filters                       | 100m            | 175Mi              | 1             | 512Mi            |                                           |
-| file-converter                | 10m             | 63Mi               | 1             | 512Mi            |                                           |
-| file-translation-worker       | 10m             | 200Mi              | 1             | 1Gi              |                                           |
-| translation-system-api        | 10m             | 512Mi              | 500m          | 1Gi              |                                           |
-| text-translation-service      | 10m             | 256Mi              | 1             | 512Mi            |                                           |
-| keycloak                      | 500m            | 804Mi              | 1             | 1400Mi           |                                           |
-| frontend-cms                  | 10m             | 210Mi              | 500m          | 512Mi            |                                           |
-| file-translation-service      | 10m             | 256Mi              | 1             | 512Mi            |                                           |
-| website-translation-service   | 10m             | 230Mi              | 1             | 512Mi            |                                           |
-| frontend                      | 10m             | 35Mi               | 500m          | 256Mi            |                                           |
-| cat-tool                      | 50m             | 1600Mi             | 4             | 2200Mi           |                                           |
-| cat-amq                       | 10m             | 330Mi              | 1             | 1Gi              |                                           |
-| cat-redis                     | 10m             | 20Mi               | 100m          | 256Mi            |                                           |
-| cat-nectm                     | 1               | 1Gi                | 2             | 2Gi              |                                           |
-| cat-nectm-postgres            | 1m              | 50Mi               | 100m          | 256Mi            |                                           |
-| cat-nectm-elasticsearch       | 1               | 1Gi                | 2             | 2Gi              |                                           |
+| **Component**                 | **CPU Request** | **Memory Request** | **CPU Limit** | **Memory Limit** | **Storage requirements**       | **Comment**                               | **Scaling supported** |
+| ----------------------------- | --------------- | ------------------ | ------------- | ---------------- | ------------------------------ | ----------------------------------------- | --------------------- |
+| tm-service                    | 1m              | 128Mi              | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| docs                          | 10m             | 50Mi               | 500m          | 256Mi            | n/a                            |                                           | Yes                   |
+| web-proxy                     | 10m             | 128Mi              | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| text-translation-worker (CPU) | 1               | 1G                 | 1             | 2G               | 30Gi [mt-system-storage]       | For each MT system                        | Yes                   |
+| text-translation-worker (GPU) | 200m            | 1G                 | 1             | 2G               | 30Gi [mt-system-storage]       | For each MT system, including 2GB GPU RAM | Yes                   |
+| filters                       | 100m            | 175Mi              | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| file-converter                | 10m             | 63Mi               | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| file-translation-worker       | 10m             | 200Mi              | 1             | 1Gi              | n/a                            |                                           | Yes                   |
+| translation-system-api        | 10m             | 512Mi              | 500m          | 1Gi              | n/a                            |                                           | Yes                   |
+| text-translation-service      | 10m             | 256Mi              | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| keycloak                      | 500m            | 804Mi              | 1             | 1400Mi           | n/a                            |                                           | No`*`                 |
+| frontend-cms                  | 10m             | 210Mi              | 500m          | 512Mi            | 5Gi [cms-data-pv-claim]        |                                           | Yes                   |
+| file-translation-service      | 10m             | 256Mi              | 1             | 512Mi            | 20Gi [file-service-storage]    |                                           | Yes                   |
+| website-translation-service   | 10m             | 230Mi              | 1             | 512Mi            | n/a                            |                                           | Yes                   |
+| frontend                      | 10m             | 35Mi               | 500m          | 256Mi            | n/a                            |                                           | Yes                   |
+| cat-tool                      | 50m             | 1600Mi             | 4             | 2200Mi           | 20Gi [cat-tool-data-pv-claim]  |                                           | No                    |
+| cat-amq                       | 10m             | 330Mi              | 1             | 1Gi              | n/a                            |                                           | No                    |
+| cat-redis                     | 10m             | 20Mi               | 100m          | 256Mi            | 2Gi [redis-data-pv-claim]      |                                           | No`*`                 |
+| cat-nectm                     | 1               | 1Gi                | 2             | 2Gi              | n/a                            |                                           | No                    |
+| cat-nectm-postgres            | 1m              | 50Mi               | 100m          | 256Mi            | 10Gi [nectm-postgres-pvc]      |                                           | No`*`                 |
+| cat-nectm-elasticsearch       | 1               | 1Gi                | 2             | 2Gi              | 32Gi [nectm-elasticsearch-pvc] |                                           | No`*`                 |
+| mysql                         | 1               | 0                  | 0             | 0                | 20Gi [mysql-data]              | Only for test environment                 | No`*`                 |
 
+`*` Not supported with default configuration, but can be configured.
+  
 ### GPU Support
 **Note**: `text-translation-worker (GPU)` - requires Kubernetes with supported NVIDIA GPU enabled cluster node (GPU must support CUDA 10).
 * Each custom NLTP MT system running on GPU requires up to 2GB of GPU memory.

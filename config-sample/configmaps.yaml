@@ -74,6 +74,7 @@ data:
   KEYCLOAK_AUTH_URL: "https://nltp-auth.example.com/auth/"
   KEYCLOAK_REALM: "Main"
   STRAPI_API_URL: "https://nltp-cms.example.com"
+  SUPPORT_EMAIL: "nltp-support@example.com"
 ---
 #keycloak.yaml
 apiVersion: v1

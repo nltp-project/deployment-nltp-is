@@ -9,10 +9,10 @@ spec:
   - ReadWriteMany
   resources:
     requests:
-      storage: 20Gi
-  #storageClassName: microk8s-hostpath
+      storage: 20Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
 ---
-# CMS
+# Strapi CMS
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -23,8 +23,22 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
-  #storageClassName: microk8s-hostpath
+      storage: 5Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
+---
+# CDN
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cdn-storage
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
 ---
 # File translation
 apiVersion: v1
@@ -37,8 +51,8 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 20Gi
-  #storageClassName: microk8s-hostpath
+      storage: 20Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
 ---
 # MT System
 apiVersion: v1
@@ -51,8 +65,8 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 30Gi   
-  #storageClassName: microk8s-hostpath
+      storage: 30Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
 ---
 # CAT Redis
 # Redis storage
@@ -66,8 +80,8 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  #storageClassName: microk8s-hostpath
+      storage: 2Gi # TODO
+  #storageClassName: microk8s-hostpath # TODO
 ---
 # NECTM Postgres
 apiVersion: v1
@@ -80,7 +94,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 10Gi # TODO
   #storageClassName: microk8s-hostpath
 ---
 # NECTM Elasticserach
@@ -94,9 +108,9 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 32Gi
+      storage: 32Gi # TODO
   # IMPORTANT NOTE: ElasticSearch does not support NFS Based storage!
-  #storageClassName: microk8s-hostpath
+  #storageClassName: microk8s-hostpath # TODO
 ---
 # MySQL (TEST ENV ONLY)
 apiVersion: v1
@@ -109,5 +123,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 20Gi # TODO
   #storageClassName: microk8s-hostpath

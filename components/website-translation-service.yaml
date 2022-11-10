@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: website-translation-service
-          image: nltpcontainers.azurecr.io/website-translation-service:44073
+          image: nltpcontainers.azurecr.io/website-translation-service:44273
           imagePullPolicy: "IfNotPresent"
           env:
             # Database configuration

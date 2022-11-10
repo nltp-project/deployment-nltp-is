@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cdn
+  name: cdn
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: cdn
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cdn
+  name: cdn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cdn
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: cdn
+    spec:
+      volumes:
+      - name: cdn-storage
+        persistentVolumeClaim:
+          claimName: cdn-storage
+      containers:
+      - image: nginx
+        name: nginx
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: cdn-storage
+          mountPath: /usr/share/nginx/html
+status: {}

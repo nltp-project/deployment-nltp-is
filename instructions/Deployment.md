@@ -23,18 +23,39 @@ List of preqreuisites:
 
 Install 3rd party resources. Refer to [deploy.sh](../deploy.sh) file for correct procedure.
 
-## Domains and Certificate
-You will need at least X domains:
-- nltp.example.com - Base domain for Frontend and backend
-- nltp-auth.example.com - For Keycloak auth
-- nltp-cms.example.com - For Frontend CMS
-- nltp-nectm.example.com - Only needed during setup to import translation memory
+## Domains and TLS/SSL Certificates
 
-You can either use a wildcard certificate or setup Letsencrypt to generate certificates automatically.
+### List of required domain names:
+- nltp.example.com - Base domain for Frontend and backend
+- nltp-auth.example.com - For Keycloak auth API and admin interface
+- nltp-cms.example.com - For Frontend CMS API and admin interface
+- nltp-nectm.example.com - Needed only during setup to import translation memory
+- nltp-cdn.example.com - If using local CDN (See [CDN.md](./CDN.md))
+
+If you have a separate NLTP dedicated domain name, for example `nltp.mt`, then you could use the following naming convention:
+- nltp.mt / www.nltp.mt
+- auth.ntlp.mt
+- cms.nltp.mt
+- nectm.nltp.mt
+- cdn.nltp.mt
+
+Note: These example `*.example.com` domain names listed above are used in deployment documentation, sample configuration (configmaps, secrets and ingresses files in [config-sample](../config-sample/) folder) and in the Strapi [(cms.sql)](../instructions/sql/cms.sql) DB backup file.
+
+### TLS/SSL Certificates:
+For securing domains you can either use multiple individual certificate for each domain or single wildcard certificate, or setup [cert-manager](https://cert-manager.io/docs/) to generate certificates automatically (for example [Let's Encrypt](https://letsencrypt.org/) issued certificates).
+
+- Example of using TLS/SSL certificate [(TLS secret)](https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets) in Kubernetes ingress YAML:
+```
+  tls:
+  - hosts:
+    - nltp.example.com  # Domain name to secure with TLS/SSL certificate
+    secretName: example-cert  # TLS secret used to secure this domain name
+```
+Note: Certificate management is out of scope of this documentation.
 
 # 1. Prepare configuration files
 
-- Make copy of `config-sample folder`, e.g. `config-test`.
+- Make copy of `config-sample` folder, e.g. `config-test`.
 - Check all files for any lines commented with `# TODO` as those lines refer to configuration that is likely different
   for different deployments.
 - Apply configuration files described in "deploy.sh"
@@ -70,3 +91,4 @@ Follow instructions for each component that needs to be configured:
 - [NECTM](./NECTM.md)
 - [CMS](./CMS.md)
 - [End user Documentation](./Docs.md)
+- [CDN](./CDN.md)

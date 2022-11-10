@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cat-tool-antivirus
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8438
+  selector:
+    app: cat-tool-antivirus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cat-tool-antivirus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cat-tool-antivirus
+  template:
+    metadata:
+      labels:
+        app: cat-tool-antivirus
+    spec:
+      containers:
+        - name: cat-tool-antivirus
+          image: maxsivkov/clammit:latest # TODO: latest is currently the only version that exists of this container
+          ports:
+            - containerPort: 8438
+          env:
+            - name: CLAMMIT_LISTEN
+              value: ":8438"
+            - name: CLAMMIT_CLAMD_URL
+              value: $(CLAMAV_PORT_3310_TCP)
+            - name: CLAMMIT_MEMORY_THRESHOLD
+              value: "31457280"
+            - name: CLAMMIT_THREADS
+              value: "2"
+            - name: CLAMMIT_APP_URL
+              value: http://cat-tool
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "1"
+            limits:
+              memory: "256Mi"

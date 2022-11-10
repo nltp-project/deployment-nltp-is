@@ -14,6 +14,8 @@ The NLTP consists of the following containerized components:
     - Elasticsearch v6
     - Redis v6
     - Cert manager
+    - [Clammit antivirus proxy](https://github.com/ifad/clammit)
+    - [ClamAV antivirus](https://www.clamav.net/)
 
 - Custom NLTP components:
     - cat-tool-backend
@@ -76,6 +78,10 @@ Recommended requirements when running in production environment:
 | cat-nectm-postgres            | 1m              | 50Mi               | 100m          | 256Mi            | 10Gi [nectm-postgres-pvc]      |                                           | No`*`                 |
 | cat-nectm-elasticsearch       | 1               | 1Gi                | 2             | 2Gi              | 32Gi [nectm-elasticsearch-pvc] |                                           | No`*`                 |
 | mysql                         | 1               | 0                  | 0             | 0                | 20Gi [mysql-data]              | Only for test environment                 | No`*`                 |
+| clamav                        | 1               | 4Gi                | 1             | 4Gi              | n/a                            | Anitivirus                                | Yes                   |
+| cat-tool-antivirus            | 1               | 256Mi              | 1             | 256Mi            | n/a                            | Anitivirus proxy for cat-tool             | Yes                   |
+| file-translation-antivirus    | 1               | 256Mi              | 1             | 256Mi            | n/a                            | Anitivirus proxy for file-translation     | Yes                   |
+| cdn                           | 10m             | 64Mi               | 200m          | 128Mi            | 5Gi [cdn-storage]              | If using local CDN                        | Yes                   |
 
 `*` Not supported with default configuration, but can be configured.
   

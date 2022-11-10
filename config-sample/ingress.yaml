@@ -45,7 +45,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: cat-tool
+            name: cat-tool-antivirus
             port:
               number: 80
       - path: /(translateproxy.*)
@@ -66,7 +66,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: file-translation-service
+            name: file-translation-antivirus
             port:
               number: 80
       - path: /api/translate/(language-directions.*)
@@ -180,6 +180,31 @@ spec:
 status:
   loadBalancer: {}
 ---
+# CDN
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: cdn
+  namespace: default
+spec:
+  tls:
+  - hosts:
+    - nltp-cdn.example.com # TODO
+    secretName: example-cert # TODO
+  rules:
+  - host: nltp-cdn.example.com # TODO
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cdn
+            port:
+              number: 80
+status:
+  loadBalancer: {}
+---
 # NecTM Admin site - enable only during setup!
 # kind: Ingress
 # apiVersion: networking.k8s.io/v1
@@ -196,10 +221,10 @@ status:
 # spec:
 #   tls:
 #   - hosts:
-#     - nltp-nectm.example.com
-#     secretName: example-cert
+#     - nltp-nectm.example.com # TODO
+#     secretName: example-cert # TODO
 #   rules:
-#     - host: nltp-nectm.example.com
+#     - host: nltp-nectm.example.com # TODO
 #       http:
 #         paths:
 #           - path: /

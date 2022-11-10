@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: file-translation-worker
-          image: nltpcontainers.azurecr.io/file-translation-worker:44058
+          image: nltpcontainers.azurecr.io/file-translation-worker:44545
           imagePullPolicy: "IfNotPresent"
           env:
             - name: RABBITMQ_USER

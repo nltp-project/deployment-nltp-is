@@ -85,7 +85,7 @@ spec:
               name: frontend-config
               key: SUPPORT_EMAIL
         name: frontend
-        image: nltpcontainers.azurecr.io/nltp-website:44218
+        image: nltpcontainers.azurecr.io/nltp-website:44560
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

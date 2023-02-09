@@ -157,7 +157,7 @@ spec:
               name: cat-tool-config
               key: TM_BLACKLIST
         name: cat-tool
-        image: nltpcontainers.azurecr.io/cat-tool-backend:44008
+        image: nltpcontainers.azurecr.io/cat-tool-backend:45685
         imagePullPolicy: "IfNotPresent"
         volumeMounts:
         - mountPath: /data

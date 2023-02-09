@@ -84,8 +84,18 @@ spec:
             configMapKeyRef:
               name: frontend-config
               key: SUPPORT_EMAIL
+        - name: WT_WIDGET_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: WT_WIDGET_URL
+        - name: X_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: frontend-secret
+              key: X_API_KEY
         name: frontend
-        image: nltpcontainers.azurecr.io/nltp-website:44560
+        image: nltpcontainers.azurecr.io/nltp-website:46073
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

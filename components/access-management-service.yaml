@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: access-management-service
+  name: access-management-service
+  namespace: default
+spec:
+  ports:
+  - name: "http"
+    port: 80
+    targetPort: 80
+  selector:
+    app: access-management-service
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: access-management-service
+  name: access-management-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: access-management-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: access-management-service
+    spec:
+      containers:
+      - image: nltpcontainers.azurecr.io/access-management-service:46034
+        imagePullPolicy: "IfNotPresent"
+        name: access-management-service
+        env:
+        - name: Services__KeyCloak__Url
+          valueFrom:
+           configMapKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__Url
+        - name: Services__KeyCloak__Realm
+          valueFrom:
+           configMapKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__Realm
+        - name: Services__KeyCloak__KeyCloakOperations__ClientId
+          valueFrom:
+           secretKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__KeyCloakOperations__ClientId
+        - name: Services__KeyCloak__KeyCloakOperations__ClientSecret
+          valueFrom:
+           secretKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__KeyCloakOperations__ClientSecret
+        - name: Services__KeyCloak__KeyCloakImpersonation__ClientId
+          valueFrom:
+           secretKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__KeyCloakImpersonation__ClientId
+        - name: Services__KeyCloak__KeyCloakImpersonation__ClientSecret
+          valueFrom:
+           secretKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__KeyCloakImpersonation__ClientSecret
+        - name: Services__KeyCloak__ApiKeyDefaultPassword
+          valueFrom:
+           secretKeyRef:
+            name: access-management-service
+            key: Services__KeyCloak__ApiKeyDefaultPassword
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          initialDelaySeconds: 1
+        resources:
+          requests:
+            cpu: 10m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

@@ -15,7 +15,6 @@ spec:
 status:
   loadBalancer: {}
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,43 +65,33 @@ spec:
            secretKeyRef:
             name: frontend-cms-secret
             key: DATABASE_USERNAME
-        - name: SMTP_HOST
+        - name: APP_KEYS
           valueFrom:
            secretKeyRef:
             name: frontend-cms-secret
-            key: SMTP_HOST
-        - name: SMTP_PORT
+            key: APP_KEYS
+        - name: API_TOKEN_SALT
           valueFrom:
            secretKeyRef:
             name: frontend-cms-secret
-            key: SMTP_PORT
-        - name: SMTP_USERNAME
+            key: API_TOKEN_SALT
+        - name: ADMIN_JWT_SECRET
           valueFrom:
            secretKeyRef:
             name: frontend-cms-secret
-            key: SMTP_USERNAME
-        - name: SMTP_PASSWORD
+            key: ADMIN_JWT_SECRET
+        - name: JWT_SECRET
           valueFrom:
            secretKeyRef:
             name: frontend-cms-secret
-            key: SMTP_PASSWORD
-        - name: SMTP_FROM
-          valueFrom:
-           secretKeyRef:
-            name: frontend-cms-secret
-            key: SMTP_FROM
-        - name: SMTP_REPLYTO
-          valueFrom:
-           secretKeyRef:
-            name: frontend-cms-secret
-            key: SMTP_REPLYTO
-        image: nltpcontainers.azurecr.io/strapi-cms:43820
+            key: JWT_SECRET
+        image: nltpcontainers.azurecr.io/strapi-cms:46063
         imagePullPolicy: "IfNotPresent"
         name: frontend-cms
         ports:
         - containerPort: 1337
         volumeMounts:
-        - mountPath: "/strapi/public/uploads"
+        - mountPath: "/opt/app/public/uploads"
           name: cms-storage
         resources:
           requests:

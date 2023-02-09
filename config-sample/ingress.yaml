@@ -41,46 +41,20 @@ spec:
             name: frontend
             port:
               number: 80
-      - path: /api/cat/(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: cat-tool-antivirus
-            port:
-              number: 80
-      - path: /(translateproxy.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: web-proxy
-            port:
-              number: 80
-      - path: /api/translate/(text.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: text-translation-service
-            port:
-              number: 80
-      - path: /api/translate/(file.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: file-translation-antivirus
-            port:
-              number: 80
-      - path: /api/translate/(language-directions.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: translation-system
-            port:
-              number: 80
-      - path: /api/(wt.*)
+      # Website translation service does not have authentication currently
+      - path: /api/(translate/website.*)
         pathType: Prefix
         backend:
           service:
             name: website-translation-service
+            port:
+              number: 80
+      # 
+      - path: /api/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: service-broker
             port:
               number: 80
 status:

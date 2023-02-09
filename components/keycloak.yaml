@@ -86,7 +86,7 @@ spec:
            secretKeyRef:
             name: keycloak-secret
             key: DB_PASSWORD
-        image: nltpcontainers.azurecr.io/auth-keycloak-nltp:43989
+        image: nltpcontainers.azurecr.io/auth-keycloak-nltp:46114
         imagePullPolicy: "IfNotPresent"
         name: keycloak
         ports:
@@ -104,7 +104,7 @@ spec:
             path: /auth/health/live
             port: 8443
             scheme: HTTPS
-          initialDelaySeconds: 60
+          initialDelaySeconds: 160
         readinessProbe:
           httpGet:
             path: /auth/health/ready

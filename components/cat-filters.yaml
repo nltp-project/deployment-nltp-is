@@ -44,7 +44,7 @@ spec:
             memory: "175Mi"
           limits:
             cpu: "1000m"
-            memory: "512Mi"
+            memory: "3Gi"
       imagePullSecrets:
         - name: nltp-cr-pull-secret
       restartPolicy: Always

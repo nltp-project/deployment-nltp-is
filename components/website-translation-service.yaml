@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: website-translation-service
-          image: nltpcontainers.azurecr.io/website-translation-service:44273
+          image: nltpcontainers.azurecr.io/website-translation-service:45921
           imagePullPolicy: "IfNotPresent"
           env:
             # Database configuration
@@ -59,6 +59,9 @@ spec:
             # Text translation service
             - name: Services__TextTranslation__Uri
               value: http://text-translation-service
+            # Configuration service
+            - name: Services__Configuration__Uri
+              value: http://configuration-service
             # KeyCloak configuration
             - name: Services__KeyCloak__Issuer
               valueFrom:
@@ -70,6 +73,11 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: JWT_KEY_KEYCLOAK
+            - name: Configuration__ServiceAPIKey
+              valueFrom:
+                secretKeyRef:
+                  name: website-translation-service
+                  key: Configuration__ServiceAPIKey
           ports:
             - containerPort: 80
           # livenessProbe:

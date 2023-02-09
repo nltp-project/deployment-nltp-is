@@ -47,7 +47,6 @@ data:
   PUBLIC_CLIENT_ID: "NLTP"
   JWT_KEY_KEYCLOAK: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIw7h1Yxkb5dTWnWRXx1Uv4qwAWm5LqZXYDDcJ9JSWNKEMp3188TjNFPiIR0T0IsrsFWwhF1mypvoHc0cYHNo+Y0USfPzywoI3YwONYkIKaqE6DonabK6lvu1LaoUGUuEQnqdgxv7RPcPj8PM2wgEVe0JielglsuwuBK02YsuO063g1GSi11uCjqg/NgJ/Xzj2V32I4mndH8UEaz2LppsJdE9GLUmbOprBQRwJa5EYlFMe3mwN7p9it07rLVqBR7na+zI+WUcf0nxnTuzi+eRr/mBgmcQZgtlaFjFltjigftarH154Xg7Y67Q7MfsUgZXfa8WMoxBGD/9ETrMyrXOQIDAQAB" # TODO - check "Reset Default Keys" in deployment/instructions/Keycloak.md document
   JWT_ISSUER_KEYCLOAK: "https://nltp-auth.example.com/auth/realms/Main" # TODO
-  TRANSLATE_API_PUB_URI: "https://nltp.example.com/api/translate" # TODO
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -75,6 +74,7 @@ data:
   KEYCLOAK_REALM: "Main"
   STRAPI_API_URL: "https://nltp-cms.example.com" # TODO
   SUPPORT_EMAIL: "nltp-support@example.com" # TODO
+  WT_WIDGET_URL: "https://nltp-cdn.example.com/latest/widget.js" # TODO
 ---
 #keycloak.yaml
 apiVersion: v1
@@ -102,4 +102,23 @@ data:
   BASE_URL: /docs/
   FOOTER: "© 2022 NLTP. All rights reserved." # TODO
   NLTP_HOME_URL: https://nltp.example.com/ # TODO
-  NLTP_LOGO_URL: https://nltp.example.com/assets/images/nltp/menu-logo.svg # TODO
+  NLTP_LOGO_URL: https://nltp.example.com/assets/external-overrides/images/logo.svg # TODO
+---
+#access-management-service.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: access-management-service
+  namespace: default
+data:
+  Services__KeyCloak__Url: "https://nltp-auth.example.com/"
+  Services__KeyCloak__Realm: "Main"
+---
+#service-broker.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-broker
+  namespace: default
+data:
+  Settings__PublicUrl: "https://nltp.example.com/api"

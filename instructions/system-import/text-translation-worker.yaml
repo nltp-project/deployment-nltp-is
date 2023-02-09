@@ -30,9 +30,9 @@ spec:
         imagePullPolicy: "IfNotPresent"
         env:
         - name: SYSTEM
-          value: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to real system id
+          value: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to imported system id
         - name: WORKDIR
-          value: /opt/letsmt-tmp/systems/yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to real system id
+          value: /opt/letsmt-tmp/systems/yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy # Change to imported system id
         - name: TOOLS_DIR
           value: /usr/local/lib/letsmt/tools-131030
         - name: RESULT_DIR
@@ -62,10 +62,10 @@ spec:
         resources:
           requests:
             cpu: "10m"
-            memory: "1Gi"
+            memory: "1Gi" # Adjust according to each system
           limits:
             cpu: "1000m"
-            memory: "2Gi"
+            memory: "5Gi" # Adjust according to each system
         volumeMounts:
         - name: mt-system-storage
           mountPath: /opt/letsmt-tmp/systems

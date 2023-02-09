@@ -1,22 +1,22 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: system-removal-job
+  name: system-removal-job-yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
 spec:
-  # Keep container available for logs
-  ttlSecondsAfterFinished: 60
+  # Keep job available for container logs
+  ttlSecondsAfterFinished: 3600 # delete job after 1 hour
   # Retry count
   backoffLimit: 0
   template:
     spec:
       containers:
       - name: mt-system-removal-job
-        image: nltpcontainers.azurecr.io/mt-system-removal-job:42896
+        image: nltpcontainers.azurecr.io/mt-system-removal-job:45372
         env:
         - name: SYSTEM_ID
           value: "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy" # Insert system id here
         - name: SYSTEM_SERVICE_URL
-          value: "http://translation-system/language-directions"
+          value: "http://translation-system/translate/language-directions"
         - name: SYSTEM_SERVICE_USER
           valueFrom:
             secretKeyRef:

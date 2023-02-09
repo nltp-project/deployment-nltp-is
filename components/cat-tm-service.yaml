@@ -84,7 +84,7 @@ spec:
         - name: Logging__LogLevel__Microsoft
           value: Warning
         name: tm-service
-        image: nltpcontainers.azurecr.io/translation-memory-service:34133
+        image: nltpcontainers.azurecr.io/translation-memory-service:44857
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: file-translation-service
-          image: nltpcontainers.azurecr.io/file-translation-service:42956
+          image: nltpcontainers.azurecr.io/file-translation-service:45819
           imagePullPolicy: "IfNotPresent"
           env:
             # RabbitMQ
@@ -88,17 +88,6 @@ spec:
             # Translation system service
             - name: Services__TranslationSystem__Uri
               value: http://translation-system
-            # KeyCloak
-            - name: Services__KeyCloak__Issuer
-              valueFrom:
-                configMapKeyRef:
-                  name: common-config
-                  key: JWT_ISSUER_KEYCLOAK
-            - name: Services__KeyCloak__Secret
-              valueFrom:
-                configMapKeyRef:
-                  name: common-config
-                  key: JWT_KEY_KEYCLOAK           
           ports:
             - containerPort: 80
           volumeMounts:

@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: file-translation-worker
-          image: nltpcontainers.azurecr.io/file-translation-worker:44545
+          image: nltpcontainers.azurecr.io/file-translation-worker:45421
           imagePullPolicy: "IfNotPresent"
           env:
             - name: RABBITMQ_USER
@@ -73,9 +73,9 @@ spec:
           resources:
             requests:
               cpu: "10m"
-              memory: "200Mi"
+              memory: "100Mi"
             limits:
               cpu: "1000m"
-              memory: "1Gi"
+              memory: "3Gi"
       imagePullSecrets:
         - name: nltp-cr-pull-secret

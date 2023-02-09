@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: file-converter
-        image: nltpcontainers.azurecr.io/file-converter-service:25920
+        image: nltpcontainers.azurecr.io/file-converter-service:44900
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 5000

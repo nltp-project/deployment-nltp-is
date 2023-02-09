@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service-broker
+  name: service-broker
+  namespace: default
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: service-broker
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service-broker
+  name: service-broker
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-broker
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: service-broker
+    spec:
+      containers:
+      - image: nltpcontainers.azurecr.io/service-broker:45707
+        imagePullPolicy: "IfNotPresent"
+        name: service-broker
+        env:
+        - name: Services__QuotaService__Url
+          value: "http://quota-service"
+        - name: Services__ResourceService__Url
+          value: "http://resource-service"
+        - name: Services__ApiKeyService__Url
+          value: "http://access-management-service"
+#       - name: Keycloak__Audiences
+#         value: ["speech-frontend", "mt-translator"] ???
+        - name: Services__Keycloak__JwtIssuer
+          valueFrom:
+            secretKeyRef:
+              name: service-broker
+              key: Services__Keycloak__JwtIssuer 
+        - name: Services__Keycloak__JwtSecret
+          valueFrom:
+            secretKeyRef:
+              name: service-broker
+              key: Services__Keycloak__JwtSecret 
+        - name: Settings__PublicUrl
+          valueFrom:
+                configMapKeyRef:
+                  name: service-broker
+                  key: Settings__PublicUrl 
+        - name: Services__Frontend__Url
+          valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SERVICE_BASE_URL 
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 10m
+            memory: "1200Mi"
+          limits:
+            cpu: 500m
+            memory: "2Gi"
+      imagePullSecrets:
+        - name: nltp-cr-pull-secret
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: docs
-        image: nltpcontainers.azurecr.io/nltp-docs:43608
+        image: nltpcontainers.azurecr.io/nltp-docs:45967
         imagePullPolicy: "IfNotPresent"
         envFrom:
         - configMapRef:
@@ -56,10 +56,10 @@ spec:
         resources:
           requests:
             cpu: "10m"
-            memory: "35Mi"
+            memory: "100Mi"
           limits:
             cpu: "500m"
-            memory: "256Mi"
+            memory: "600Mi"
       imagePullSecrets:
         - name: nltp-cr-pull-secret
       restartPolicy: Always

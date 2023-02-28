@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: docs
-        image: nltpcontainers.azurecr.io/nltp-docs:45967
+        image: nltpcontainers.azurecr.io/nltp-docs:46163
         imagePullPolicy: "IfNotPresent"
         envFrom:
         - configMapRef:

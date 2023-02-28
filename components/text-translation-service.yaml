@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: text-translation-service
-          image: nltpcontainers.azurecr.io/text-translation-service:45722
+          image: nltpcontainers.azurecr.io/text-translation-service:46443
           imagePullPolicy: "IfNotPresent"
           env:
             # Configuration service

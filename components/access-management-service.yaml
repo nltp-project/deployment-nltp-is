@@ -34,7 +34,7 @@ spec:
         app: access-management-service
     spec:
       containers:
-      - image: nltpcontainers.azurecr.io/access-management-service:46034
+      - image: nltpcontainers.azurecr.io/access-management-service:46286
         imagePullPolicy: "IfNotPresent"
         name: access-management-service
         env:

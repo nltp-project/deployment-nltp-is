@@ -1,0 +1,213 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/default-backend: frontend
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100M"        
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"      
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location = /robots.txt {
+        add_header Content-Type text/plain;
+        return 200 'User-agent: *\nDisallow: /\n';
+      }
+    nginx.ingress.kubernetes.io/configuration-snippet: |       
+      more_set_headers "Host $http_host";
+      more_set_headers "X-Real-IP $remote_addr";
+      more_set_headers "X-Forwarded-For $http_x_forwarded_for";
+spec:
+  defaultBackend:
+    service:
+      name: frontend
+      port:
+        number: 80
+  tls:
+  - hosts:
+    - nltp.is
+    secretName: nltp-cert
+  rules:
+  - host: nltp.is
+    http:
+      paths:
+      # Website translation service does not have authentication currently
+      - path: /api/(translate/website.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: website-translation-service
+            port:
+              number: 80
+      #
+      - path: /api/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: service-broker
+            port:
+              number: 80
+      - path: /((.*))
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+status:
+  loadBalancer: {}
+---
+# Docs
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: docs-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  tls:
+  - hosts:
+    - nltp.is
+    secretName: nltp-cert
+  rules:
+  - host: nltp.is
+    http:
+      paths:
+      - path: /docs(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: docs
+            port:
+              number: 80
+status:
+  loadBalancer: {}
+---
+# Keycloak
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: keycloak-auth
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Forwarded-For: $proxy_add_x_forwarded_for";
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  defaultBackend:
+    service:
+      name: keycloak
+      port:
+        number: 443
+  tls:
+  - hosts:
+    - nltp-auth.nltp.is
+    secretName: nltp-cert
+  rules:
+  - host: nltp-auth.nltp.is
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 443
+status:
+  loadBalancer: {}
+---
+# CMS
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: http-ingress-strapi
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # Allow larger file uploads
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  tls:
+  - hosts:
+    - nltp-cms.nltp.is
+    secretName: nltp-cert
+  rules:
+  - host: nltp-cms.nltp.is
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-cms
+            port:
+              number: 80
+status:
+  loadBalancer: {}
+---
+# CDN
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: cdn
+  namespace: default
+spec:
+  tls:
+  - hosts:
+    - nltp-cdn.nltp.is
+    secretName: nltp-cert
+  rules:
+  - host: nltp-cdn.nltp.is
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cdn
+            port:
+              number: 80
+status:
+  loadBalancer: {}
+---
+# NecTM Admin site - enable only during setup!
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: "nectm-admin"
+#   namespace: default
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     nginx.ingress.kubernetes.io/configuration-snippet: |
+#       more_set_headers "Host $http_host";
+#       more_set_headers "X-Real-IP $remote_addr";
+#       more_set_headers "X-Forwarded-For $http_x_forwarded_for";
+#       more_set_headers "X-Forwarded-Proto $scheme";
+# spec:
+#   tls:
+#   - hosts:
+#     - nltp-nectm.nltp.is # TODO - DONE
+#     secretName: nltp-cert # TODO - maybe this should be nltp-nectm-cert? -------------------------------------------- check if this is ok
+#   rules:
+#     - host: nltp-nectm.nltp.is # TODO - DONE
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: nectm
+#                 port:
+#                   number: 7979
+# status:
+#   loadBalancer: {}
+

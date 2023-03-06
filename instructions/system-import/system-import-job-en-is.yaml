@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: system-import-job-40ae861f-6bcc-4318-8977-94ec65cd9fec
+spec:
+  # Keep job available for container logs
+  ttlSecondsAfterFinished: 3600 # delete job after 1 hour
+  # Retry count
+  backoffLimit: 0
+  template:
+    spec:
+      initContainers:
+      - name: download-smt
+        image: alpine:latest
+        command: ['sh', '-c', 'ID=smt-40ae861f-6bcc-4318-8977-94ec65cd9fec && wget https://nltpsystems.blob.core.windows.net/systems/$ID.tgz -O /models/$ID.tgz'] # Insert system id here
+        volumeMounts:
+        - name: mt-system-storage
+          mountPath: /models
+      containers:
+      - name: mt-system-import-job
+        image: nltpcontainers.azurecr.io/mt-system-import-job:45371
+        env:
+        - name: SYSTEM_ID
+          value: "smt-40ae861f-6bcc-4318-8977-94ec65cd9fec" # Insert system id here
+        - name: SYSTEM_SERVICE_URL
+          value: "http://translation-system/translate/language-directions"
+        - name: SYSTEM_SERVICE_USER
+          valueFrom:
+            secretKeyRef:
+              key: system_import_username
+              name: translation-services
+        - name: SYSTEM_SERVICE_PASS
+          valueFrom:
+            secretKeyRef:
+              key: system_import_password
+              name: translation-services
+        - name: MODEL_DIR
+          value: "/models"
+        volumeMounts:
+        - name: mt-system-storage
+          mountPath: /models
+      restartPolicy: Never
+      volumes:
+      - name: mt-system-storage
+        persistentVolumeClaim:
+          claimName: mt-system-storage
+      imagePullSecrets:
+      - name: nltp-cr-pull-secret

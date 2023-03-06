@@ -12,5 +12,5 @@ kubectl apply -f https://github.com/knative-sandbox/eventing-rabbitmq/releases/d
 kubectl wait --for=condition=Established --all crd
 
 # Deploy NLTP
-kubectl apply -f config-sample # change according env
+kubectl apply -f config-nltp-is
 kubectl apply -f components

@@ -1,0 +1,23 @@
+# XXX(rkjaran): dynamically provisioned EFS does NOT work with many of the
+#   images used by the project because of how the driver does user identity
+#   enforcement.
+#
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-02d334abbab2590f4
+  directoryPerms: "700"
+  gidRangeStart: "1000" # optional
+  gidRangeEnd: "2000" # optional
+  basePath: "/dynamic_provisioning" # optional
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer

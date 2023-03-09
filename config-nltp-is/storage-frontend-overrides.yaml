@@ -1,0 +1,14 @@
+# Frontend external overrides
+# See: ../instructions/Frontend.md
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend-external-overrides-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: efs-sc

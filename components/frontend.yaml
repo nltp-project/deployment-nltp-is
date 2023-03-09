@@ -32,8 +32,15 @@ spec:
       labels:
         app: frontend
     spec:
+      volumes:
+      - name: frontend-external-overrides
+        persistentVolumeClaim:
+          claimName: frontend-external-overrides-pvc
       containers:
-      - env:
+      - volumeMounts:
+        - name: frontend-external-overrides
+          mountPath: /usr/share/nginx/html/assets/external-overrides
+        env:
         - name: SERVICE_BASE_URL
           valueFrom:
             configMapKeyRef:

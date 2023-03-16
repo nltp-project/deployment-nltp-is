@@ -13,18 +13,17 @@ To use eTranslation MT systems, please update 2 entries in `secrets.yaml` file:
   etranslation_password: "ETRANSLATION_PASSWORD"
 ```
 
-Replace `ETRANSLATION_APPLICATION_NAME` and `ETRANSLATION_PASSWORD` with your _NLTP_ eTranslation account credentials.
+Replace `ETRANSLATION_APPLICATION_NAME` and `ETRANSLATION_PASSWORD` with the eTranslation API access credentials.
 
-If you don't have an eTranslation account, please write to eTranslation Helpdesk: [help@cefat-tools-services.eu](mailto:help@cefat-tools-services.eu), stating your:
+If you don't have eTranslation API access credentials, please write to eTranslation Helpdesk: [DGT-ETRANSLATION-ADVISORY@ec.europa.eu](mailto:DGT-ETRANSLATION-ADVISORY@ec.europa.eu), stating your:
 
 * Contact information:
   * Name;
   * Affiliation;
   * Email;
 * Description:
-  * Objectives of the project;
-  * Expected number of requests per day;
-  * The expected size of queries.
+  * Objectives of the project.
+
 
 ## Custom NLTP Machine Translation system setup Instructions
 

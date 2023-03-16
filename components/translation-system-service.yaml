@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: translation-system-api
-          image: nltpcontainers.azurecr.io/translation-system-service:45375
+          image: nltpcontainers.azurecr.io/translation-system-service:46632
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 80

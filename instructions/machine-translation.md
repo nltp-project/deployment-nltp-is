@@ -31,6 +31,6 @@ First, you need to acquire a link to the custom translation system archive file.
 
 Follow the instructions about importing and activating custom translation systems:
 
-* [MT system import](mt-system-import.md)
-* [MT system removal](mt-system-removal.md)
-* [MT system startup](mt-system-startup.md)
+* [MT system import](system-import/mt-system-import.md)
+* [MT system removal](system-import/mt-system-removal.md)
+* [MT system startup](system-import/mt-system-startup.md)

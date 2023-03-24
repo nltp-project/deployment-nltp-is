@@ -52,7 +52,7 @@ See the [Domains and Certificates](instructions/domains-and-certificates.md) sec
 
 ## Deployment Instructions
 
-See the [Deployment Instructions](instructions/) section.
+See the [Deployment Instructions](instructions/README.md) section.
 
 ## Keycloak user management
 

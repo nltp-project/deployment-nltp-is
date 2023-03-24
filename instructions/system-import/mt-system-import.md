@@ -7,7 +7,7 @@
 
 ### Adjust import job manifest file:
 
-Replace all occurrences of `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` with your system id in [system-import-job.yaml](../../system-import/system-import-job.yaml)
+Replace all occurrences of `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` with your system id in [system-import-job.yaml](system-import-job.yaml)
 
 Run import job:
 

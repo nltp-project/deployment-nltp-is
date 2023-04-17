@@ -1,0 +1,24 @@
+{
+  "i18n": {
+    "availableLanguages": [
+      {
+        "code": "is",
+        "name": "Icelandic"
+      },
+      {
+        "code": "en",
+        "name": "English"
+      }
+    ]
+  },
+  "header": {
+    "logo": "assets/external-overrides/images/logo_side_menu_not_collapsed_and_mobile_menus.png"
+  },
+  "menu": {
+    "ngxTldMenu": {
+      "logo": "assets/external-overrides/images/logo_side_menu_not_collapsed_and_mobile_menus.png",
+      "burgerMenuLogo": "assets/external-overrides/images/logo_side_menu_not_collapsed_and_mobile_menus.png",
+      "logoCollapsed": "assets/external-overrides/images/logo_side_menu_collapsed.png"
+    }
+  }
+}

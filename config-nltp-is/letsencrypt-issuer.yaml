@@ -8,7 +8,7 @@ spec:
     # The ACME server URL
     server: https://acme-v02.api.letsencrypt.org/directory
     # Email address used for ACME registration
-    email: nltp-support@nltp.is
+    email: nltp-support@muninn.is
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
       name: letsencrypt-prod
@@ -28,10 +28,10 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: nltp.is
+  commonName: muninn.is
   dnsNames:
-  - nltp.is
-  - nltp-auth.nltp.is
-  - nltp-cms.nltp.is
-  - nltp-cdn.nltp.is
-  - nltp-nectm.nltp.is
+  - muninn.is
+  - nltp-auth.muninn.is
+  - nltp-cms.muninn.is
+  - nltp-cdn.muninn.is
+  - nltp-nectm.muninn.is

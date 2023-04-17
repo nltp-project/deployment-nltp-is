@@ -27,10 +27,10 @@ spec:
         number: 80
   tls:
   - hosts:
-    - nltp.is
+    - muninn.is
     secretName: nltp-cert
   rules:
-  - host: nltp.is
+  - host: muninn.is
     http:
       paths:
       # Website translation service does not have authentication currently
@@ -71,10 +71,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - nltp.is
+    - muninn.is
     secretName: nltp-cert
   rules:
-  - host: nltp.is
+  - host: muninn.is
     http:
       paths:
       - path: /docs(.*)
@@ -107,10 +107,10 @@ spec:
         number: 443
   tls:
   - hosts:
-    - nltp-auth.nltp.is
+    - nltp-auth.muninn.is
     secretName: nltp-cert
   rules:
-  - host: nltp-auth.nltp.is
+  - host: nltp-auth.muninn.is
     http:
       paths:
       - path: /
@@ -138,10 +138,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - nltp-cms.nltp.is
+    - nltp-cms.muninn.is
     secretName: nltp-cert
   rules:
-  - host: nltp-cms.nltp.is
+  - host: nltp-cms.muninn.is
     http:
       paths:
       - path: /
@@ -163,10 +163,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - nltp-cdn.nltp.is
+    - nltp-cdn.muninn.is
     secretName: nltp-cert
   rules:
-  - host: nltp-cdn.nltp.is
+  - host: nltp-cdn.muninn.is
     http:
       paths:
       - path: /
@@ -195,10 +195,10 @@ status:
 # spec:
 #   tls:
 #   - hosts:
-#     - nltp-nectm.nltp.is # TODO - DONE
+#     - nltp-nectm.muninn.is # TODO - DONE
 #     secretName: nltp-cert # TODO - maybe this should be nltp-nectm-cert? -------------------------------------------- check if this is ok
 #   rules:
-#     - host: nltp-nectm.nltp.is # TODO - DONE
+#     - host: nltp-nectm.muninn.is # TODO - DONE
 #       http:
 #         paths:
 #           - path: /

@@ -26,7 +26,7 @@ There is also a Gitbook version available for this documentation at [tilde.gitbo
 Provided deployment instructions are tested on:
 
 * Kubernetes 1.24/stable (microk8s)
-* 2x Nodes with 32GB RAM, 8vCPU (Intel x86\_64), 150GB HDD, NFS shared storage.
+* 2x Nodes with 32GB RAM, 8vCPU (Intel x86\_64), 150GB HDD, enabled IPv4 & IPv6 support, NFS shared storage.
 * OS: Ubuntu 20.04.4 LTS
 
 **Important note:** ARM CPU is not supported! Do not use AWS Graviton or similar node types with ARM architecture.
@@ -52,7 +52,11 @@ See the [Domains and Certificates](instructions/domains-and-certificates.md) sec
 
 ## Deployment Instructions
 
-See the [Deployment Instructions](instructions/) section.
+See the [Deployment Instructions](instructions/README.md) section.
+
+## Keycloak user management
+
+See the [Keycloak user management](instructions/keycloak-user-management.md) section.
 
 ## Overview of Components and requirements
 
@@ -106,3 +110,5 @@ The NLTP deployment consists of the following containerized components that are 
 * Oct 24, 2022 (2022-3 release) - Minor changes.
 * Nov 10, 2022 (2022-4 release) - Minor changes.
 * Feb 3, 2023 (2023-1 release) - **The release contains breaking changes, please see** [**2023-1-release.md**](instructions/upgrade/2023-1-release.md) **for upgrade instructions.**
+* Feb 28, 2023 (2023-2 release) - Minor changes, bugfixes - containers image version changes & updated 3rd party requirements in [deploy.sh](deploy.sh)
+* Mar 16, 2023 (2023-3 release) - Minor changes, bugfixes and updated instructions - please see updated instructions regarding [platform user roles and user management in Keycloak](instructions/Keycloak.md) and [API Keys](instructions/api-keys.md) notes.

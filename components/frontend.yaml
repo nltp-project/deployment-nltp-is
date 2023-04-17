@@ -102,7 +102,7 @@ spec:
               name: frontend-secret
               key: X_API_KEY
         name: frontend
-        image: nltpcontainers.azurecr.io/nltp-website:46340
+        image: nltpcontainers.azurecr.io/nltp-website:46673
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 80

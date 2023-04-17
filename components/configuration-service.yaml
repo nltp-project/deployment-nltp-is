@@ -34,7 +34,7 @@ spec:
         app: configuration-service
     spec:
       containers:
-      - image: nltpcontainers.azurecr.io/configuration-service:45367
+      - image: nltpcontainers.azurecr.io/configuration-service:46711
         imagePullPolicy: "IfNotPresent"
         name: configuration-service
         env:

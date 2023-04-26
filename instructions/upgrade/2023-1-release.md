@@ -41,9 +41,9 @@ CMS Engine (Strapi) has been upgraded from v3 to v4, which means if you have imp
 
 Run these commands:
 
-```
+```bash
 kubectl exec deploy/mysql -i -- mysql -e "drop database nltp_cms;" # change DB name accordingly
-kubectl exec deploy/mysql -i -- mysql -e "create database nltp_cms CHARACTER SET utf8 COLLATE utf8_unicode_ci; # change DB name accordingly
+kubectl exec deploy/mysql -i -- mysql -e "create database nltp_cms CHARACTER SET utf8 COLLATE utf8_unicode_ci;" # change DB name accordingly
 kubectl exec deploy/mysql -i -- mysql < sql/cms.sql # import patched cms DB (replace example.com contents beforehand)
 ```
 

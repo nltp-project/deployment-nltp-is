@@ -130,6 +130,8 @@ Fields:
 
 *decline_button* - reject/decline button text.
 
+*showDeclineButton* - toggle visibility for decline button. It is reccomended to keep the property set to false, since decline button does not disable any cookies and all used cookies (few of them) are necessary to ensure application core functionality, such as UI language and authentication.
+
 ### Mt main
 
 This type is global for the whole application and is not tied to any specific page. 

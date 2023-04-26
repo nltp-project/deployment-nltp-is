@@ -1,8 +1,11 @@
 # NLTP Identity customization
 
-This document provides description for customizing different UI elements, such as logo, colors, texts and some simple SEO adjustments. It gives possibility to adjust site identity to each client needs. Text, logo and style files that are meant for customization from file system are stored under `assets/external-overrides` folder and you can modify these files accordingly. 
+This document provides description for customizing different UI elements, such as logo, colors, texts and some simple SEO adjustments. It gives possibility to adjust site identity to each client needs. Text, logo and style files that are meant for customization from file system are stored under `assets/external-overrides` folder and you can modify these files accordingly.
 
-All paths are shown how they are accessible in docker image. Application is stored in `usr/share/nginx/html` and all other paths are **relative to this path**.
+All paths are shown how they are accessible in docker container image. Application is stored in `/usr/share/nginx/html` and all other paths are **relative to this path**.
+
+>NOTE: Make sure to make all your UI customization changes persistent by rebuilding container image with your custom UI changes or with the **recommended option** - storing changes on a persistent volume, mounted on specific Frontend Pod mountPath - `/usr/share/nginx/html/assets/external-overrides`. Read more [here](#configure-ui-customization-persistence) about the recommended option setup.
+---
 
 ## Search engine optimization
 
@@ -152,4 +155,71 @@ And there is also seperately configurable logo that gets displayed while app get
 
 Additionaly you can also change favicon. For doing that, you need to replace file `favicon.ico`. **This file name and extension can't be changed!**
 
+## Default language directions for CAT tool
 
+It is possible to also configure default language direction for  CAT tool. To do so, you need to edit `assets/external-overrides/external-overrides.settings.json`. Example configuration for setting cat tool default language direction from Croatian to English: 
+
+```
+"mt": {
+    "cat": {
+      "defaultFrom": "hr",
+      "defaultTo": "en"
+    }
+  }
+```
+
+Correct codes can be found in [Matecat documentation](https://www.matecat.com/api/docs) under *supported languages* section. **Please make sure to put only first part of the code in configuration.**
+
+
+---
+## Configure UI customization persistence
+To configure UI customization persistence without rebuilding frontend container image you can use this exaple configuration:
+
+1) Adjust `storage.yaml`, add `PVC` config for frontend:
+```yaml
+---
+# Frontend customizations
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend-customization-data-pv-claim
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+```
+2) Adjust `frontend.yaml`, add `volumMounts` and `volumes` parts:
+
+```yaml
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 80
+       ### ADD volumMounts ####
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html/assets/external-overrides"
+          name: frontend-customization-data
+       ######################## 
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "35Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+      imagePullSecrets:
+        - name: tildemt-acr
+      restartPolicy: Always
+      ## Add volumes #########
+      volumes:
+      - name: frontend-customization-data
+        persistentVolumeClaim:
+          claimName: frontend-customization-data-pv-claim
+      ########################    
+status: {}
+```
+3) Deploy these updated YAML files to Kubernetes
+
+4) Copy your customizations to the new Frontend's PVC.

@@ -12,7 +12,7 @@ Navigate to `https://nltp-auth.example.com/auth/` and authorize.
 
 1\) Create a KC user in the **Main realm**:
 
-* email: `serviceuser@nltp.test`
+* email (example): `serviceuser@nltp.test`
 * email verified: `On`
 
 2\) Remove from Required user actions: Terms and Conditions, Update Password. Save.

@@ -13,7 +13,7 @@ spec:
     predeclared: true
     exchangeName: "file-translation"
     queueName: "file-translation"
-    parallelism: 1
+    parallelism: 1 # How much messages are sent to workers from RabbitMQ
   delivery:
     # Retry "forever" => 30 days" 
     retry: 2592000

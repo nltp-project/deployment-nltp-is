@@ -33,9 +33,4 @@ CREATE USER IF NOT EXISTS 'nltp_cattool_user'@'%' IDENTIFIED WITH mysql_native_p
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON `nltp_cattool`.* TO 'nltp_cattool_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON `nltp_cattool_conversions_log`.* TO 'nltp_cattool_user'@'%';
 
--- Configuration Service
-CREATE SCHEMA IF NOT EXISTS `nltp_configuration` CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-CREATE USER IF NOT EXISTS 'nltp_configuration_user'@'%' IDENTIFIED WITH mysql_native_password BY 'nltp_configuration_pass';
-GRANT ALL PRIVILEGES ON `nltp_configuration`.* TO 'nltp_configuration_user'@'%';
-
 FLUSH PRIVILEGES;

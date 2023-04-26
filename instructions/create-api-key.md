@@ -6,7 +6,9 @@ API keys are stored inside KeyCloak as user entities. Platform users can generat
 
 In order to create an API key, a JWT Access Token is required. See [Obtaining Authentication Token](auth-token.md) page for how to obtain it.
 
-**Request**
+Create 2 API keys with the names - `website` and `website-translation-service`, to do so, replace name `my api key` with `website` and `website-translation-service` in example request:
+
+**Example request**
 
 ```bash
 curl --location --request POST 'https://nltp.example.com/api/apiKey' \
@@ -38,3 +40,8 @@ Note: You can also specify domain restrictions that will be allowed to use this 
 ```
 
 Value inside `id` field is API Key.
+
+NOTE: Check keycloak and access-management-service Pod logs if there are problem with getting successful response.
+
+---
+Go back to: [Configure component API Keys](api-keys.md)

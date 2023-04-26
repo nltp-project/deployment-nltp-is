@@ -74,7 +74,6 @@ The NLTP deployment consists of the following containerized components that are 
 | cat-tool-antivirus            | 1               | 256Mi              | 1             | 256Mi            | n/a                             | Anitivirus proxy for cat-tool                | Yes                   |
 | cdn                           | 10m             | 64Mi               | 200m          | 128Mi            | 5Gi \[cdn-storage]              | If using local CDN                           | Yes                   |
 | clamav                        | 1               | 4Gi                | 1             | 4Gi              | n/a                             | Anitivirus                                   | Yes                   |
-| configuration-service         | 10m             | 250Mi              | 500m          | 500Mi            | n/a                             |                                              | Yes                   |
 | docs                          | 10m             | 100Mi              | 500m          | 600Mi            | n/a                             |                                              | Yes                   |
 | file-converter                | 10m             | 63Mi               | 1             | 512Mi            | n/a                             |                                              | Yes                   |
 | file-translation-antivirus    | 1               | 256Mi              | 1             | 256Mi            | n/a                             | Anitivirus proxy for file-translation        | Yes                   |
@@ -91,7 +90,6 @@ The NLTP deployment consists of the following containerized components that are 
 | text-translation-worker (GPU) | 200m            | 1G                 | 1             | 5G               | 30Gi \[mt-system-storage]       | For each MT system, additional 1-2GB GPU RAM | Yes                   |
 | tm-service                    | 1m              | 128Mi              | 1             | 512Mi            | n/a                             |                                              | Yes                   |
 | translation-system-api        | 10m             | 512Mi              | 500m          | 1Gi              | n/a                             |                                              | Yes                   |
-| web-proxy                     | 10m             | 128Mi              | 1             | 512Mi            | n/a                             |                                              | Yes                   |
 | website-translation-service   | 10m             | 230Mi              | 1             | 512Mi            | n/a                             |                                              | Yes                   |
 
 `*` Scaling is not supported out of the box but can be configured. Refer to the official documentation for more information.
@@ -109,6 +107,7 @@ The NLTP deployment consists of the following containerized components that are 
 * Oct 18, 2022 (2022-2 release) - Minor changes.
 * Oct 24, 2022 (2022-3 release) - Minor changes.
 * Nov 10, 2022 (2022-4 release) - Minor changes.
-* Feb 3, 2023 (2023-1 release) - **The release contains breaking changes, please see** [**2023-1-release.md**](instructions/upgrade/2023-1-release.md) **for upgrade instructions.**
+* Feb 3, 2023 (2023-1 release) - **The release contains breaking changes, please see [2023-1-release.md](instructions/upgrade/2023-1-release.md) for upgrade instructions.**
 * Feb 28, 2023 (2023-2 release) - Minor changes, bugfixes - containers image version changes & updated 3rd party requirements in [deploy.sh](deploy.sh)
 * Mar 16, 2023 (2023-3 release) - Minor changes, bugfixes and updated instructions - please see updated instructions regarding [platform user roles and user management in Keycloak](instructions/Keycloak.md) and [API Keys](instructions/api-keys.md) notes.
+* Apr 26, 2023 (2023-4 release) - Please see [2023-4-release.md](instructions/upgrade/2023-4-release.md#changes) for release change details and upgrade instructions.

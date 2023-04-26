@@ -86,7 +86,7 @@ spec:
            secretKeyRef:
             name: keycloak-secret
             key: DB_PASSWORD
-        image: nltpcontainers.azurecr.io/auth-keycloak-nltp:46534
+        image: nltpcontainers.azurecr.io/auth-keycloak-nltp:47412
         imagePullPolicy: "IfNotPresent"
         name: keycloak
         ports:

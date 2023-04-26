@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: file-translation-service
-          image: nltpcontainers.azurecr.io/file-translation-service:45819
+          image: nltpcontainers.azurecr.io/file-translation-service:47260
           imagePullPolicy: "IfNotPresent"
           env:
             # RabbitMQ
@@ -83,7 +83,7 @@ spec:
             - name: Services__Database__ConnectionString
               value: server=$(DB_HOST);database=$(DB_NAME);uid=$(DB_USER);pwd=$(DB_PASSWORD)
             # Metadata expiration
-            - name: Configuration__UserGroupMetadataExpiration____default__
+            - name: Configuration__UserGroupMetadataExpiration__DefaultFileTranslationGroupExpiration
               value: "7:00:00"
             # Translation system service
             - name: Services__TranslationSystem__Uri

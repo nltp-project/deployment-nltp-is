@@ -44,18 +44,16 @@ spec:
           value: "http://resource-service"
         - name: Services__ApiKeyService__Url
           value: "http://access-management-service"
-#       - name: Keycloak__Audiences
-#         value: ["speech-frontend", "mt-translator"] ???
-        - name: Services__Keycloak__JwtIssuer
-          valueFrom:
-            secretKeyRef:
-              name: service-broker
-              key: Services__Keycloak__JwtIssuer 
         - name: Services__Keycloak__JwtSecret
           valueFrom:
-            secretKeyRef:
-              name: service-broker
-              key: Services__Keycloak__JwtSecret 
+            configMapKeyRef:
+              name: common-config
+              key: JWT_KEY_KEYCLOAK
+        - name: Services__Keycloak__JwtIssuer
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: JWT_ISSUER_KEYCLOAK
         - name: Settings__PublicUrl
           valueFrom:
                 configMapKeyRef:

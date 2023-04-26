@@ -45,8 +45,9 @@ metadata:
 data:
   SERVICE_BASE_URL: "https://nltp.example.com" # TODO
   PUBLIC_CLIENT_ID: "NLTP"
-  JWT_KEY_KEYCLOAK: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIw7h1Yxkb5dTWnWRXx1Uv4qwAWm5LqZXYDDcJ9JSWNKEMp3188TjNFPiIR0T0IsrsFWwhF1mypvoHc0cYHNo+Y0USfPzywoI3YwONYkIKaqE6DonabK6lvu1LaoUGUuEQnqdgxv7RPcPj8PM2wgEVe0JielglsuwuBK02YsuO063g1GSi11uCjqg/NgJ/Xzj2V32I4mndH8UEaz2LppsJdE9GLUmbOprBQRwJa5EYlFMe3mwN7p9it07rLVqBR7na+zI+WUcf0nxnTuzi+eRr/mBgmcQZgtlaFjFltjigftarH154Xg7Y67Q7MfsUgZXfa8WMoxBGD/9ETrMyrXOQIDAQAB" # TODO - check "Reset Default Keys" in deployment/instructions/Keycloak.md document
-  JWT_ISSUER_KEYCLOAK: "https://nltp-auth.example.com/auth/realms/Main" # TODO
+  JWT_ISSUER_KEYCLOAK: "https://nltp-auth.example.com/auth/realms/Main" # TODO | Keycloak
+  JWT_KEY_KEYCLOAK: "" # TODO | Update with the Value of the "public_key" from the URL above after "Reset Default Keys" step is done, check - instructions/Keycloak.md for more info.
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -70,7 +71,7 @@ data:
   CAT_SYSTEM_LIST_URL: "https://nltp.example.com/api/translate/language-directions" # TODO
   CAT_TERM_LOOKUP_URL: "https://eurotermbank.com/search/{term}/{srcLang}?target={trgLang}" # TODO
   MT_APP_ID: "MT|Web|NLTP"
-  KEYCLOAK_AUTH_URL: "https://nltp-auth.example.com/auth/" # TODO
+  KEYCLOAK_AUTH_URL: "https://nltp-auth.example.com/auth/" # TODO | Keycloak
   KEYCLOAK_REALM: "Main"
   STRAPI_API_URL: "https://nltp-cms.example.com" # TODO
   SUPPORT_EMAIL: "nltp-support@example.com" # TODO
@@ -100,7 +101,7 @@ data:
   TAGLINE: 'National Language Technology Platform'  # TODO
   URL: https://nltp.example.com/ # TODO - Docs URL used for generating sitemap
   BASE_URL: /docs/
-  FOOTER: "© 2022 NLTP. All rights reserved." # TODO
+  FOOTER: "© 2023 NLTP. All rights reserved." # TODO
   NLTP_HOME_URL: https://nltp.example.com/ # TODO
   NLTP_LOGO_URL: https://nltp.example.com/assets/external-overrides/images/logo.svg # TODO
 ---

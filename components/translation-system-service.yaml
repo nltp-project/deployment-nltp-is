@@ -27,14 +27,11 @@ spec:
     spec:
       containers:
         - name: translation-system-api
-          image: nltpcontainers.azurecr.io/translation-system-service:46632
+          image: nltpcontainers.azurecr.io/translation-system-service:46912
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 80
           env:
-          # Configuration service
-          - name: Services__Configuration__Uri
-            value: "http://configuration-service"
           # System service
           - name: Services__System__Username
             valueFrom:

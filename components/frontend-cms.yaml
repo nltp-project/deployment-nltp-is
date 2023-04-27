@@ -85,7 +85,7 @@ spec:
            secretKeyRef:
             name: frontend-cms-secret
             key: JWT_SECRET
-        image: nltpcontainers.azurecr.io/strapi-cms:46063
+        image: nltpcontainers.azurecr.io/strapi-cms:47120
         imagePullPolicy: "IfNotPresent"
         name: frontend-cms
         ports:

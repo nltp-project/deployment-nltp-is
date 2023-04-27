@@ -1,5 +1,10 @@
 # Keycloak
 
+> NOTE: After the first deployment of Keycloak, please do some basic checks to ensure that rest of configuration will work:
+* Make sure that after first deployment of Keycloak did not produced any error messages in Keylcoak pod logs (make sure that realm Main was imported and admin user was added successfully).
+* Go to *Keycloak Administration Console*: `https://nltp-auth.example.com/auth/admin/` and enter admin user credentials from your `secrets.yaml` file. Use your values of `KEYCLOAK_USER` and `KEYCLOAK_PASSWORD` entries under "keycloak-secret". After signing in, switch from `master` to `Main` Realm, then select `Clients` and make sure that there are *access-management-service* & *api-impersonator* among the other Clients.
+
+---
 Several tasks must be completed to ensure correct and secure Keycloak operation.
 
 ## Update Domains
@@ -13,11 +18,11 @@ Generate and replace the Public key with the new one, and disable the old key.
 
 Follow: [Rotating keys documentation](https://www.keycloak.org/docs/latest/server\_admin/#rotating-keys)
 
-Update `JWT_KEY_KEYCLOAK` value in file `configmaps.yaml` with the new public key. Make sure to deploy the new configmap and restart related pods -
+Update `JWT_KEY_KEYCLOAK` value in file `configmaps.yaml` with the new public key. Make sure to deploy the new configmap and restart related pods:
 
 * cat-tool
+* service-broker
 * tm-service
-* file-translation-service
 * website-translation-service
 
 ## SMTP Server Configuration
@@ -51,3 +56,7 @@ Example mapper configuration, adjust as necessary for your implementation:
  * Select "Mapper type" - "Hardcoded Role", then click on "Select Role" and select "MT Group user" role. Press "Save".
 
 NOTE: Make sure to update Authentication configuration for the Keycloak "Main" realm - check "Required actions" tab, make sure to disable "Update Password" under "Set as default action" column.
+
+## Localization
+
+To configure desired locales, go to "Realm settings > Localization" and set "Internationalization" to "Enabled". After internationalization is enabled, select your wanted locales in "Supported locales".

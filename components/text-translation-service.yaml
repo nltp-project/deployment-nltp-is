@@ -27,12 +27,9 @@ spec:
     spec:
       containers:
         - name: text-translation-service
-          image: nltpcontainers.azurecr.io/text-translation-service:46615
+          image: nltpcontainers.azurecr.io/text-translation-service:46798
           imagePullPolicy: "IfNotPresent"
           env:
-            # Configuration service
-            - name: Services__Configuration__Uri
-              value: "http://configuration-service"
             # Configuration
             - name: Configuration__PublicUri
               valueFrom:
